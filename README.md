@@ -1,6 +1,6 @@
-# This package is designed for full-stack developers, who also not know with deal with jwt on frontend
+# Jwt Runner
 
-
+This package is designed for full-stack developers, who also not know with deal with jwt on frontend
 
 ## Using:
 
