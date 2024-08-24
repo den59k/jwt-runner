@@ -1,0 +1,38 @@
+{
+  "name": "jwt-runner",
+  "author": {
+    "name": "den59k"
+  },
+  "repository": "https://github.com/den59k/jwt-runner.git",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "typescript": "^5.5.4",
+    "vite-plugin-dts": "^4.0.3",
+    "vitest": "^2.0.5"
+  },
+  "dependencies": {},
+  "files": [
+    "dist"
+  ],
+  "main": "dist/backend.cjs",
+  "browser": "dist/browser.js",
+  "exports": {
+    ".": {
+      "require": "./dist/backend.cjs",
+      "import": "./dist/backend.js",
+      "types": "./dist/backend.d.ts"
+    },
+    "./browser": {
+      "require": "./dist/browser.cjs",
+      "import": "./dist/browser.js",
+      "types": "./dist/browser.d.ts"
+    }
+  }
+}
