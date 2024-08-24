@@ -4,7 +4,7 @@
     "name": "den59k"
   },
   "repository": "https://github.com/den59k/jwt-runner.git",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "type": "module",
   "scripts": {
