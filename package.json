@@ -5,7 +5,7 @@
   },
   "description": "Package for generate and auto-update tokens on client browsers",
   "repository": "https://github.com/den59k/jwt-runner.git",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -19,8 +19,7 @@
     "vitest": "^2.0.5",
     "vuesix": "^1.0.28"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "files": [
     "dist"
   ],
