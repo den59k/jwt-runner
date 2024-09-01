@@ -7,6 +7,7 @@ type JwtRunnerOptions = {
 
 type Events = {
   "onAuthorized": () => void
+  "onTokenUpdate": (accessToken: string) => void
   "onFailed": (e: Error) => void
 }
 
@@ -76,6 +77,7 @@ export class JwtClient {
   }
 
   private onSuccess(accessToken: string) {
+    this._events.dispatch("onTokenUpdate", accessToken)
     this.updateAccessTokenTimer(accessToken)
     if (this.status !== "active") {
       this.status = "active"
