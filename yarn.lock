@@ -1226,6 +1226,11 @@ vue-tsc@2.0.29:
     "@vue/language-core" "2.0.29"
     semver "^7.5.4"
 
+vuesix@^1.0.28:
+  version "1.0.28"
+  resolved "https://registry.yarnpkg.com/vuesix/-/vuesix-1.0.28.tgz#01aaa42f8139178a0c4b4c066a9b4152285ba83b"
+  integrity sha512-pvwCD88p24620aT+ROviDMbYemnUAdYtwZ2gIyU5+ICiGUX6QYhYELzrS5GZYrMkNhdKj1uHmz51Xp5AFQ6ZqQ==
+
 which@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/which/-/which-2.0.2.tgz#7c6a8dd0a636a0327e10b59c9286eee93f3f51b1"

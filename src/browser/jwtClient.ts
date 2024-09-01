@@ -1,18 +1,24 @@
-
-/** Цели этого класса:
-* Запоминать refreshToken и accessToken в localStorage
-* Запускать таймер, который будет делать запрос на обновление токена и обновлять refreshToken и accessToken
-*/
+import { createEventEmitter } from "vuesix/src/utils/eventEmitter"
 
 type JwtRunnerOptions = {
   onUpdate: (refreshToken: string) => Promise<{ accessToken: string, refreshToken: string }>
   debug?: boolean
 }
 
+type Events = {
+  "onAuthorized": () => void
+  "onFailed": (e: Error) => void
+}
 
+
+/** Цели этого класса:
+* Запоминать refreshToken и accessToken в localStorage
+* Запускать таймер, который будет делать запрос на обновление токена и обновлять refreshToken и accessToken
+*/
 export class JwtClient {
 
   status: "pending" | "not-active" | "active" = "pending"
+  private _events = createEventEmitter<Events>()
   private refreshTokenKey = "refreshToken"
   private refreshTokenUpdateKey = "refreshToken-update"
   private accessTokenKey = "accessToken"
@@ -22,6 +28,7 @@ export class JwtClient {
 
   constructor(options: JwtRunnerOptions) {
     this.onUpdate = options.onUpdate
+    
     this.debug = options.debug ?? false
   }
 
@@ -48,26 +55,37 @@ export class JwtClient {
       this.onSuccess(newAccessToken!)
       return { newRefreshToken, newAccessToken }
     }
-    
-    const currentRefreshToken = window.localStorage.getItem(this.refreshTokenKey)
-    if (!currentRefreshToken) {
-      // Throw Error
-      return
+
+    try {
+      const currentRefreshToken = window.localStorage.getItem(this.refreshTokenKey)
+      if (!currentRefreshToken) {
+        throw new Error("Refresh token is not stored")
+      }
+
+      window.localStorage.setItem(this.refreshTokenUpdateKey, Date.now().toString())
+      const { accessToken, refreshToken } = await this.onUpdate(currentRefreshToken)
+      
+      window.localStorage.setItem(this.refreshTokenKey, refreshToken)    
+      window.localStorage.setItem(this.accessTokenKey, accessToken)  
+  
+      this.onSuccess(accessToken)
+      return { refreshToken, accessToken }
+    } catch(e: any) {
+      this.onFailed(e)
     }
-
-    window.localStorage.setItem(this.refreshTokenUpdateKey, Date.now().toString())
-    const { accessToken, refreshToken } = await this.onUpdate(currentRefreshToken)
-
-    window.localStorage.setItem(this.refreshTokenKey, refreshToken)    
-    window.localStorage.setItem(this.accessTokenKey, accessToken)  
-
-    this.onSuccess(accessToken)
-    return { refreshToken, accessToken }
   }
 
   private onSuccess(accessToken: string) {
     this.updateAccessTokenTimer(accessToken)
-    this.status = "active"
+    if (this.status !== "active") {
+      this.status = "active"
+      this._events.dispatch("onAuthorized")
+    }
+  }
+
+  private onFailed(e: Error) {
+    this.status = "not-active"
+    this._events.dispatch("onFailed", e)
   }
 
   async start() {
@@ -103,4 +121,7 @@ export class JwtClient {
     window.localStorage.removeItem(this.accessTokenKey)
     this.stop()
   }
+
+  addEventListener = this._events.addEventListener.bind(this._events)
+  removeEventListener = this._events.removeEventListener.bind(this._events)
 }
